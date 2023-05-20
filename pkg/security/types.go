@@ -1,4 +1,4 @@
-package auth
+package security
 
 import (
 	"github.com/gin-gonic/gin"
@@ -17,6 +17,8 @@ type AuthenticationDelegate interface {
 	Authenticate(ctx context.Context, principal *Principal) error
 }
 
+//
+
 type AuthorizationFilter interface {
 	Authorize(ctx *gin.Context)
 }
@@ -29,10 +31,14 @@ type AuthorizationDelegate interface {
 	Authorize(ctx context.Context, principal *Principal) error
 }
 
+//
+
 type TokenManager interface {
 	Generate(principal *Principal) (*string, error)
 	Validate(tokenString string) (*Principal, error)
 }
+
+//
 
 type PrincipalManager interface {
 	Create(ctx context.Context, principal *Principal) error
@@ -41,4 +47,41 @@ type PrincipalManager interface {
 	Find(ctx context.Context, username string) (*Principal, error)
 	Exists(ctx context.Context, username string) error
 	ChangePassword(ctx context.Context, principal *Principal) error
+}
+
+//
+
+const (
+	Argon2PrefixKey = "{argon2}"
+	BcryptPrefixKey = "{bcrypt}"
+	Pbkdf2PrefixKey = "{pbkdf2}"
+	ScryptPrefixKey = "{scrypt}"
+)
+
+var (
+	_ PasswordEncoder   = (*Argon2PasswordEncoder)(nil)
+	_ PasswordEncoder   = (*BcryptPasswordEncoder)(nil)
+	_ PasswordEncoder   = (*Pbkdf2PasswordEncoder)(nil)
+	_ PasswordEncoder   = (*ScryptPasswordEncoder)(nil)
+	_ PasswordEncoder   = (*DelegatingPasswordEncoder)(nil)
+	_ PasswordEncoder   = (*DefaultPasswordManager)(nil)
+	_ PasswordGenerator = (*DefaultPasswordGenerator)(nil)
+	_ PasswordGenerator = (*DefaultPasswordManager)(nil)
+	_ PasswordManager   = (*DefaultPasswordManager)(nil)
+)
+
+type PasswordEncoder interface {
+	Encode(rawPassword string) (*string, error)
+	Matches(encodedPassword string, rawPassword string) (*bool, error)
+	UpgradeEncoding(encodedPassword string) (*bool, error)
+}
+
+type PasswordGenerator interface {
+	Generate() string
+	Validate(rawPassword string) error
+}
+
+type PasswordManager interface {
+	PasswordEncoder
+	PasswordGenerator
 }

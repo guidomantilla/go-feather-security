@@ -1,6 +1,8 @@
-package password
+package security
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+)
 
 type DefaultPasswordManager struct {
 	passwordEncoder   PasswordEncoder

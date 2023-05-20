@@ -1,8 +1,12 @@
-package password
+package security
 
 import "errors"
 
 var (
+	ErrFailedAuthentication = errors.New("incorrect principal username or password")
+	ErrFailedAuthorization  = errors.New("invalid authorities")
+	ErrTokenInvalid         = errors.New("invalid token")
+
 	ErrPasswordEncoderNotFound   = errors.New("password encoder not found")
 	ErrRawPasswordIsEmpty        = errors.New("rawPassword cannot be empty")
 	ErrSaltIsNil                 = errors.New("salt cannot be nil")

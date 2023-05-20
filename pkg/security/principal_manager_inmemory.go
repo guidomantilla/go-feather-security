@@ -1,19 +1,17 @@
-package auth
+package security
 
 import (
 	"context"
 	"errors"
 	"reflect"
-
-	"github.com/guidomantilla/go-feather-security/pkg/password"
 )
 
 type InMemoryPrincipalManager struct {
 	repository      map[string]*Principal
-	passwordManager password.PasswordManager
+	passwordManager PasswordManager
 }
 
-func NewInMemoryPrincipalManager(passwordManager password.PasswordManager) *InMemoryPrincipalManager {
+func NewInMemoryPrincipalManager(passwordManager PasswordManager) *InMemoryPrincipalManager {
 	return &InMemoryPrincipalManager{
 		passwordManager: passwordManager,
 		repository:      make(map[string]*Principal),
