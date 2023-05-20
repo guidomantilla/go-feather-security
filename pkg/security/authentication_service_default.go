@@ -2,6 +2,8 @@ package security
 
 import (
 	"context"
+
+	"go.uber.org/zap"
 )
 
 type DefaultAuthenticationService struct {
@@ -10,6 +12,15 @@ type DefaultAuthenticationService struct {
 }
 
 func NewDefaultAuthenticationService(tokenManager TokenManager, authenticationDelegate AuthenticationDelegate) *DefaultAuthenticationService {
+
+	if tokenManager == nil {
+		zap.L().Fatal("starting up - error setting up authenticationService: tokenManager is nil")
+	}
+
+	if authenticationDelegate == nil {
+		zap.L().Fatal("starting up - error setting up authenticationService: authenticationDelegate is nil")
+	}
+
 	return &DefaultAuthenticationService{
 		tokenManager:           tokenManager,
 		authenticationDelegate: authenticationDelegate,

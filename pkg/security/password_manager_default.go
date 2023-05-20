@@ -12,11 +12,11 @@ type DefaultPasswordManager struct {
 func NewDefaultPasswordManager(passwordEncoder PasswordEncoder, passwordGenerator PasswordGenerator) *DefaultPasswordManager {
 
 	if passwordEncoder == nil {
-		zap.L().Fatal("starting up - error setting up default password manager: passwordEncoder is nil")
+		zap.L().Fatal("starting up - error setting up passwordManager: passwordEncoder is nil")
 	}
 
 	if passwordGenerator == nil {
-		zap.L().Fatal("starting up - error setting up default password manager: passwordGenerator is nil")
+		zap.L().Fatal("starting up - error setting up passwordManager: passwordGenerator is nil")
 	}
 
 	return &DefaultPasswordManager{

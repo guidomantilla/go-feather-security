@@ -13,6 +13,8 @@ type DefaultClaims struct {
 	Principal
 }
 
+type JwtTokenManagerOption func(tokenManager *JwtTokenManager)
+
 type JwtTokenManager struct {
 	issuer        string
 	timeout       time.Duration
@@ -20,12 +22,37 @@ type JwtTokenManager struct {
 	signingMethod jwt.SigningMethod
 }
 
-func NewJwtTokenManager(issuer string, timeout time.Duration, secretKey any, signingMethod jwt.SigningMethod) *JwtTokenManager {
-	return &JwtTokenManager{
-		issuer:        issuer,
-		timeout:       timeout,
+func NewJwtTokenManager(secretKey any, options ...JwtTokenManagerOption) *JwtTokenManager {
+
+	tokenManager := &JwtTokenManager{
+		issuer:        "",
+		timeout:       time.Hour * 24,
 		secretKey:     secretKey,
-		signingMethod: signingMethod,
+		signingMethod: jwt.SigningMethodHS512,
+	}
+
+	for _, opt := range options {
+		opt(tokenManager)
+	}
+
+	return tokenManager
+}
+
+func WithIssuer(issuer string) JwtTokenManagerOption {
+	return func(tokenManager *JwtTokenManager) {
+		tokenManager.issuer = issuer
+	}
+}
+
+func WithTimeout(timeout time.Duration) JwtTokenManagerOption {
+	return func(tokenManager *JwtTokenManager) {
+		tokenManager.timeout = timeout
+	}
+}
+
+func WithSigningMethod(signingMethod jwt.SigningMethod) JwtTokenManagerOption {
+	return func(tokenManager *JwtTokenManager) {
+		tokenManager.signingMethod = signingMethod
 	}
 }
 

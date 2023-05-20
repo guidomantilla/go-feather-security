@@ -5,6 +5,32 @@ import (
 	"golang.org/x/net/context"
 )
 
+type GrantedAuthority struct {
+	Role *string `json:"role,omitempty"`
+}
+
+type Principal struct {
+	Username           *string             `json:"username,omitempty" binding:"required"`
+	Password           *string             `json:"password,omitempty" binding:"required"`
+	AccountNonExpired  *bool               `json:"account_non_expired,omitempty"`
+	AccountNonLocked   *bool               `json:"account_non_locked,omitempty"`
+	PasswordNonExpired *bool               `json:"password_non_expired,omitempty"`
+	Enabled            *bool               `json:"enabled,omitempty"`
+	SignUpDone         *bool               `json:"signup_done,omitempty"`
+	Authorities        *[]GrantedAuthority `json:"authorities,omitempty"`
+}
+
+type PrincipalManager interface {
+	Create(ctx context.Context, principal *Principal) error
+	Update(ctx context.Context, principal *Principal) error
+	Delete(ctx context.Context, username string) error
+	Find(ctx context.Context, username string) (*Principal, error)
+	Exists(ctx context.Context, username string) error
+	ChangePassword(ctx context.Context, principal *Principal) error
+}
+
+//
+
 type AuthenticationEndpoint interface {
 	Authenticate(ctx *gin.Context)
 }
@@ -36,17 +62,6 @@ type AuthorizationDelegate interface {
 type TokenManager interface {
 	Generate(principal *Principal) (*string, error)
 	Validate(tokenString string) (*Principal, error)
-}
-
-//
-
-type PrincipalManager interface {
-	Create(ctx context.Context, principal *Principal) error
-	Update(ctx context.Context, principal *Principal) error
-	Delete(ctx context.Context, username string) error
-	Find(ctx context.Context, username string) (*Principal, error)
-	Exists(ctx context.Context, username string) error
-	ChangePassword(ctx context.Context, principal *Principal) error
 }
 
 //
