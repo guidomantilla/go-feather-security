@@ -2,8 +2,7 @@ package security
 
 import (
 	"context"
-
-	"github.com/guidomantilla/go-feather-web/pkg/validation"
+	"github.com/guidomantilla/go-feather-security/pkg/validation"
 )
 
 type PrincipalManager interface {
