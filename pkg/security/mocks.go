@@ -134,20 +134,6 @@ func (mr *MockPrincipalManagerMockRecorder) VerifyResource(ctx, username, resour
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyResource", reflect.TypeOf((*MockPrincipalManager)(nil).VerifyResource), ctx, username, resource)
 }
 
-// VerifyRole mocks base method.
-func (m *MockPrincipalManager) VerifyRole(ctx context.Context, username, role string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VerifyRole", ctx, username, role)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// VerifyRole indicates an expected call of VerifyRole.
-func (mr *MockPrincipalManagerMockRecorder) VerifyRole(ctx, username, role interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyRole", reflect.TypeOf((*MockPrincipalManager)(nil).VerifyRole), ctx, username, role)
-}
-
 // MockAuthenticationEndpoint is a mock of AuthenticationEndpoint interface.
 type MockAuthenticationEndpoint struct {
 	ctrl     *gomock.Controller
@@ -207,45 +193,7 @@ func (m *MockAuthenticationService) EXPECT() *MockAuthenticationServiceMockRecor
 }
 
 // Authenticate mocks base method.
-func (m *MockAuthenticationService) Authenticate(ctx context.Context, principal *Principal) (*string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Authenticate", ctx, principal)
-	ret0, _ := ret[0].(*string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Authenticate indicates an expected call of Authenticate.
-func (mr *MockAuthenticationServiceMockRecorder) Authenticate(ctx, principal interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authenticate", reflect.TypeOf((*MockAuthenticationService)(nil).Authenticate), ctx, principal)
-}
-
-// MockAuthenticationDelegate is a mock of AuthenticationDelegate interface.
-type MockAuthenticationDelegate struct {
-	ctrl     *gomock.Controller
-	recorder *MockAuthenticationDelegateMockRecorder
-}
-
-// MockAuthenticationDelegateMockRecorder is the mock recorder for MockAuthenticationDelegate.
-type MockAuthenticationDelegateMockRecorder struct {
-	mock *MockAuthenticationDelegate
-}
-
-// NewMockAuthenticationDelegate creates a new mock instance.
-func NewMockAuthenticationDelegate(ctrl *gomock.Controller) *MockAuthenticationDelegate {
-	mock := &MockAuthenticationDelegate{ctrl: ctrl}
-	mock.recorder = &MockAuthenticationDelegateMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockAuthenticationDelegate) EXPECT() *MockAuthenticationDelegateMockRecorder {
-	return m.recorder
-}
-
-// Authenticate mocks base method.
-func (m *MockAuthenticationDelegate) Authenticate(ctx context.Context, principal *Principal) error {
+func (m *MockAuthenticationService) Authenticate(ctx context.Context, principal *Principal) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Authenticate", ctx, principal)
 	ret0, _ := ret[0].(error)
@@ -253,9 +201,9 @@ func (m *MockAuthenticationDelegate) Authenticate(ctx context.Context, principal
 }
 
 // Authenticate indicates an expected call of Authenticate.
-func (mr *MockAuthenticationDelegateMockRecorder) Authenticate(ctx, principal interface{}) *gomock.Call {
+func (mr *MockAuthenticationServiceMockRecorder) Authenticate(ctx, principal interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authenticate", reflect.TypeOf((*MockAuthenticationDelegate)(nil).Authenticate), ctx, principal)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authenticate", reflect.TypeOf((*MockAuthenticationService)(nil).Authenticate), ctx, principal)
 }
 
 // MockAuthorizationFilter is a mock of AuthorizationFilter interface.

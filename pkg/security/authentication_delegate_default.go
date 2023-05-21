@@ -49,7 +49,7 @@ func (delegate *DefaultAuthenticationDelegate) Authenticate(ctx context.Context,
 		return ErrFailedAuthentication
 	}
 
-	principal.Password = nil
+	principal.Role = user.Role
 	principal.Authorities = user.Authorities
 
 	return nil

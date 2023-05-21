@@ -117,6 +117,15 @@ func (manager *JwtTokenManager) Validate(tokenString string) (*Principal, error)
 		return nil, ErrTokenInvalid
 	}
 
+	if value, ok = mapClaims["role"]; !ok {
+		return nil, ErrTokenInvalid
+	}
+
+	var role string
+	if role, ok = value.(string); !ok {
+		return nil, ErrTokenInvalid
+	}
+
 	if value, ok = mapClaims["authorities"]; !ok {
 		return nil, ErrTokenInvalid
 	}
@@ -133,6 +142,7 @@ func (manager *JwtTokenManager) Validate(tokenString string) (*Principal, error)
 
 	principal := &Principal{
 		Username:    feather_commons_util.ValueToPtr(username),
+		Role:        feather_commons_util.ValueToPtr(role),
 		Authorities: grantedAuthorities,
 	}
 

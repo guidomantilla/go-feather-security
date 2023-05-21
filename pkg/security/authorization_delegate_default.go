@@ -24,7 +24,12 @@ func NewDefaultAuthorizationDelegate(principalManager PrincipalManager) *Default
 func (delegate *DefaultAuthorizationDelegate) Authorize(ctx context.Context, principal *Principal) error {
 
 	var err error
-	if err = delegate.principalManager.Exists(ctx, *principal.Username); err != nil {
+	var user *Principal
+	if user, err = delegate.principalManager.Find(ctx, *principal.Username); err != nil {
+		return ErrFailedAuthorization
+	}
+
+	if *(user.Role) != *(principal.Role) {
 		return ErrFailedAuthorization
 	}
 
@@ -33,7 +38,7 @@ func (delegate *DefaultAuthorizationDelegate) Authorize(ctx context.Context, pri
 		return ErrFailedAuthorization
 	}
 
-	if err = delegate.principalManager.VerifyResource(ctx, *principal.Username, value.(string)); err != nil {
+	if err = delegate.principalManager.VerifyResource(ctx, *user.Username, value.(string)); err != nil {
 		return ErrFailedAuthorization
 	}
 

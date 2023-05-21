@@ -10,12 +10,13 @@ type RoleCtxKey struct{}
 type ResourceCtxKey struct{}
 
 type GrantedAuthority struct {
-	Role      *string  `json:"role,omitempty"`
+	Name      *string  `json:"name,omitempty"`
 	Resources []string `json:"resource,omitempty"`
 }
 
 type Principal struct {
 	Username           *string            `json:"username,omitempty" binding:"required"`
+	Role               *string            `json:"role,omitempty"`
 	Password           *string            `json:"password,omitempty" binding:"required"`
 	AccountNonExpired  *bool              `json:"account_non_expired,omitempty"`
 	AccountNonLocked   *bool              `json:"account_non_locked,omitempty"`
@@ -23,6 +24,7 @@ type Principal struct {
 	Enabled            *bool              `json:"enabled,omitempty"`
 	SignUpDone         *bool              `json:"signup_done,omitempty"`
 	Authorities        []GrantedAuthority `json:"authorities,omitempty"`
+	Token              *string            `json:"token,omitempty"`
 }
 
 type PrincipalManager interface {
@@ -32,7 +34,6 @@ type PrincipalManager interface {
 	Find(ctx context.Context, username string) (*Principal, error)
 	Exists(ctx context.Context, username string) error
 	ChangePassword(ctx context.Context, username string, password string) error
-	VerifyRole(ctx context.Context, username string, role string) error
 	VerifyResource(ctx context.Context, username string, resource string) error
 }
 
@@ -43,10 +44,6 @@ type AuthenticationEndpoint interface {
 }
 
 type AuthenticationService interface {
-	Authenticate(ctx context.Context, principal *Principal) (*string, error)
-}
-
-type AuthenticationDelegate interface {
 	Authenticate(ctx context.Context, principal *Principal) error
 }
 

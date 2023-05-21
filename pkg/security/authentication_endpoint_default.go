@@ -41,14 +41,13 @@ func (endpoint *DefaultAuthenticationEndpoint) Authenticate(ctx *gin.Context) {
 		return
 	}
 
-	var token *string
-	if token, err = endpoint.authenticationService.Authenticate(ctx.Request.Context(), principal); err != nil {
+	if err = endpoint.authenticationService.Authenticate(ctx.Request.Context(), principal); err != nil {
 		ex := rest.UnauthorizedException(err.Error())
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"token": token})
+	ctx.JSON(http.StatusOK, principal)
 }
 
 func validate(principal *Principal) []error {
@@ -56,6 +55,10 @@ func validate(principal *Principal) []error {
 	var errors []error
 
 	if err := validation.ValidateFieldIsRequired("this", "username", principal.Username); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := validation.ValidateFieldMustBeUndefined("this", "role", principal.Role); err != nil {
 		errors = append(errors, err)
 	}
 
@@ -86,6 +89,10 @@ func validate(principal *Principal) []error {
 	if err := validation.ValidateStructMustBeUndefined("this", "authorities", principal.Authorities); err != nil {
 		errors = append(errors, err)
 		return errors
+	}
+
+	if err := validation.ValidateFieldMustBeUndefined("this", "token", principal.Token); err != nil {
+		errors = append(errors, err)
 	}
 
 	return errors

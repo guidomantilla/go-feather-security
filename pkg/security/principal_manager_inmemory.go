@@ -9,7 +9,6 @@ import (
 
 type InMemoryPrincipalManager struct {
 	principalRepo   map[string]*Principal
-	roleRepo        map[string]map[string]string
 	resourceRepo    map[string]map[string]string
 	passwordManager PasswordManager
 }
@@ -23,7 +22,6 @@ func NewInMemoryPrincipalManager(passwordManager PasswordManager) *InMemoryPrinc
 	return &InMemoryPrincipalManager{
 		passwordManager: passwordManager,
 		principalRepo:   make(map[string]*Principal),
-		roleRepo:        make(map[string]map[string]string),
 		resourceRepo:    make(map[string]map[string]string),
 	}
 }
@@ -44,10 +42,9 @@ func (manager *InMemoryPrincipalManager) Create(ctx context.Context, principal *
 	}
 
 	manager.principalRepo[*principal.Username] = principal
+	manager.resourceRepo[*principal.Username] = make(map[string]string)
 
 	for _, authority := range principal.Authorities {
-		manager.roleRepo[*principal.Username][*authority.Role] = *authority.Role
-
 		for _, resource := range authority.Resources {
 			manager.resourceRepo[*principal.Username][resource] = resource
 		}
@@ -62,7 +59,7 @@ func (manager *InMemoryPrincipalManager) Update(ctx context.Context, principal *
 
 func (manager *InMemoryPrincipalManager) Delete(_ context.Context, username string) error {
 	delete(manager.principalRepo, username)
-	delete(manager.roleRepo, username)
+	delete(manager.resourceRepo, username)
 	return nil
 }
 
@@ -104,20 +101,6 @@ func (manager *InMemoryPrincipalManager) ChangePassword(ctx context.Context, use
 	return nil
 }
 
-func (manager *InMemoryPrincipalManager) VerifyRole(ctx context.Context, username string, role string) error {
-
-	var err error
-	if err = manager.Exists(ctx, username); err != nil {
-		return err
-	}
-
-	if _, ok := manager.roleRepo[username][role]; !ok {
-		return errors.New("role not found")
-	}
-
-	return nil
-}
-
 func (manager *InMemoryPrincipalManager) VerifyResource(ctx context.Context, username string, resource string) error {
 
 	var err error
@@ -126,7 +109,7 @@ func (manager *InMemoryPrincipalManager) VerifyResource(ctx context.Context, use
 	}
 
 	if _, ok := manager.resourceRepo[username][resource]; !ok {
-		return errors.New("role not found")
+		return errors.New("resource not found")
 	}
 
 	return nil
