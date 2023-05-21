@@ -44,26 +44,26 @@ func WithSupportedDecoders(decoders map[string]PasswordEncoder) DelegatingPasswo
 	}
 }
 
-func (encoder *DelegatingPasswordEncoder) Encode(rawPassword string) (*string, error) {
-	return encoder.encoder.Encode(rawPassword)
+func (delegate *DelegatingPasswordEncoder) Encode(rawPassword string) (*string, error) {
+	return delegate.encoder.Encode(rawPassword)
 }
 
-func (encoder *DelegatingPasswordEncoder) Matches(encodedPassword string, rawPassword string) (*bool, error) {
+func (delegate *DelegatingPasswordEncoder) Matches(encodedPassword string, rawPassword string) (*bool, error) {
 
-	for prefix, encoder := range encoder.decoders {
+	for prefix, decoder := range delegate.decoders {
 		if strings.HasPrefix(encodedPassword, prefix) {
-			return encoder.Matches(encodedPassword, rawPassword)
+			return decoder.Matches(encodedPassword, rawPassword)
 		}
 	}
 
 	return nil, ErrPasswordEncoderNotFound
 }
 
-func (encoder *DelegatingPasswordEncoder) UpgradeEncoding(encodedPassword string) (*bool, error) {
+func (delegate *DelegatingPasswordEncoder) UpgradeEncoding(encodedPassword string) (*bool, error) {
 
-	for prefix, encoder := range encoder.decoders {
+	for prefix, decoder := range delegate.decoders {
 		if strings.HasPrefix(encodedPassword, prefix) {
-			return encoder.UpgradeEncoding(encodedPassword)
+			return decoder.UpgradeEncoding(encodedPassword)
 		}
 	}
 

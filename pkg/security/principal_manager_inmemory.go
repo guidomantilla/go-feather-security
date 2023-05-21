@@ -3,7 +3,6 @@ package security
 import (
 	"context"
 	"errors"
-	"reflect"
 
 	"go.uber.org/zap"
 )
@@ -23,49 +22,6 @@ func NewInMemoryPrincipalManager(passwordManager PasswordManager) *InMemoryPrinc
 		passwordManager: passwordManager,
 		repository:      make(map[string]*Principal),
 	}
-}
-
-func (manager *InMemoryPrincipalManager) Authenticate(ctx context.Context, principal *Principal) error {
-
-	var err error
-	var user *Principal
-	if user, err = manager.Find(ctx, *principal.Username); err != nil {
-		return ErrFailedAuthentication
-	}
-
-	if user.Password == nil || *(user.Password) == "" {
-		return ErrFailedAuthentication
-	}
-
-	var matches *bool
-	if matches, err = manager.passwordManager.Matches(*(user.Password), *principal.Password); err != nil || !*(matches) {
-		return ErrFailedAuthentication
-	}
-
-	var needsUpgrade *bool
-	if needsUpgrade, err = manager.passwordManager.UpgradeEncoding(*(user.Password)); err != nil || *(needsUpgrade) {
-		return ErrFailedAuthentication
-	}
-
-	principal.Password = nil
-	principal.Authorities = user.Authorities
-
-	return nil
-}
-
-func (manager *InMemoryPrincipalManager) Authorize(ctx context.Context, principal *Principal) error {
-
-	var err error
-	var user *Principal
-	if user, err = manager.Find(ctx, *principal.Username); err != nil {
-		return ErrFailedAuthorization
-	}
-
-	if !reflect.DeepEqual(user.Authorities, principal.Authorities) {
-		return ErrFailedAuthorization
-	}
-
-	return nil
 }
 
 func (manager *InMemoryPrincipalManager) Create(ctx context.Context, principal *Principal) error {
