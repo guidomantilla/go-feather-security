@@ -36,17 +36,17 @@ func (m *MockPrincipalManager) EXPECT() *MockPrincipalManagerMockRecorder {
 }
 
 // ChangePassword mocks base method.
-func (m *MockPrincipalManager) ChangePassword(ctx context.Context, principal *Principal) error {
+func (m *MockPrincipalManager) ChangePassword(ctx context.Context, username, password string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ChangePassword", ctx, principal)
+	ret := m.ctrl.Call(m, "ChangePassword", ctx, username, password)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ChangePassword indicates an expected call of ChangePassword.
-func (mr *MockPrincipalManagerMockRecorder) ChangePassword(ctx, principal interface{}) *gomock.Call {
+func (mr *MockPrincipalManagerMockRecorder) ChangePassword(ctx, username, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangePassword", reflect.TypeOf((*MockPrincipalManager)(nil).ChangePassword), ctx, principal)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangePassword", reflect.TypeOf((*MockPrincipalManager)(nil).ChangePassword), ctx, username, password)
 }
 
 // Create mocks base method.
@@ -118,6 +118,34 @@ func (m *MockPrincipalManager) Update(ctx context.Context, principal *Principal)
 func (mr *MockPrincipalManagerMockRecorder) Update(ctx, principal interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockPrincipalManager)(nil).Update), ctx, principal)
+}
+
+// VerifyResource mocks base method.
+func (m *MockPrincipalManager) VerifyResource(ctx context.Context, username, resource string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyResource", ctx, username, resource)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// VerifyResource indicates an expected call of VerifyResource.
+func (mr *MockPrincipalManagerMockRecorder) VerifyResource(ctx, username, resource interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyResource", reflect.TypeOf((*MockPrincipalManager)(nil).VerifyResource), ctx, username, resource)
+}
+
+// VerifyRole mocks base method.
+func (m *MockPrincipalManager) VerifyRole(ctx context.Context, username, role string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyRole", ctx, username, role)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// VerifyRole indicates an expected call of VerifyRole.
+func (mr *MockPrincipalManagerMockRecorder) VerifyRole(ctx, username, role interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyRole", reflect.TypeOf((*MockPrincipalManager)(nil).VerifyRole), ctx, username, role)
 }
 
 // MockAuthenticationEndpoint is a mock of AuthenticationEndpoint interface.

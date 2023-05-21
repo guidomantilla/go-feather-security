@@ -5,19 +5,24 @@ import (
 	"golang.org/x/net/context"
 )
 
+type RoleCtxKey struct{}
+
+type ResourceCtxKey struct{}
+
 type GrantedAuthority struct {
-	Role *string `json:"role,omitempty"`
+	Role      *string  `json:"role,omitempty"`
+	Resources []string `json:"resource,omitempty"`
 }
 
 type Principal struct {
-	Username           *string             `json:"username,omitempty" binding:"required"`
-	Password           *string             `json:"password,omitempty" binding:"required"`
-	AccountNonExpired  *bool               `json:"account_non_expired,omitempty"`
-	AccountNonLocked   *bool               `json:"account_non_locked,omitempty"`
-	PasswordNonExpired *bool               `json:"password_non_expired,omitempty"`
-	Enabled            *bool               `json:"enabled,omitempty"`
-	SignUpDone         *bool               `json:"signup_done,omitempty"`
-	Authorities        *[]GrantedAuthority `json:"authorities,omitempty"`
+	Username           *string            `json:"username,omitempty" binding:"required"`
+	Password           *string            `json:"password,omitempty" binding:"required"`
+	AccountNonExpired  *bool              `json:"account_non_expired,omitempty"`
+	AccountNonLocked   *bool              `json:"account_non_locked,omitempty"`
+	PasswordNonExpired *bool              `json:"password_non_expired,omitempty"`
+	Enabled            *bool              `json:"enabled,omitempty"`
+	SignUpDone         *bool              `json:"signup_done,omitempty"`
+	Authorities        []GrantedAuthority `json:"authorities,omitempty"`
 }
 
 type PrincipalManager interface {
@@ -26,7 +31,9 @@ type PrincipalManager interface {
 	Delete(ctx context.Context, username string) error
 	Find(ctx context.Context, username string) (*Principal, error)
 	Exists(ctx context.Context, username string) error
-	ChangePassword(ctx context.Context, principal *Principal) error
+	ChangePassword(ctx context.Context, username string, password string) error
+	VerifyRole(ctx context.Context, username string, role string) error
+	VerifyResource(ctx context.Context, username string, resource string) error
 }
 
 //

@@ -133,7 +133,7 @@ func (manager *JwtTokenManager) Validate(tokenString string) (*Principal, error)
 
 	principal := &Principal{
 		Username:    feather_commons_util.ValueToPtr(username),
-		Authorities: feather_commons_util.ValueToPtr(grantedAuthorities),
+		Authorities: grantedAuthorities,
 	}
 
 	return principal, nil

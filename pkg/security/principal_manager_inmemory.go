@@ -8,7 +8,9 @@ import (
 )
 
 type InMemoryPrincipalManager struct {
-	repository      map[string]*Principal
+	principalRepo   map[string]*Principal
+	roleRepo        map[string]map[string]string
+	resourceRepo    map[string]map[string]string
 	passwordManager PasswordManager
 }
 
@@ -20,7 +22,9 @@ func NewInMemoryPrincipalManager(passwordManager PasswordManager) *InMemoryPrinc
 
 	return &InMemoryPrincipalManager{
 		passwordManager: passwordManager,
-		repository:      make(map[string]*Principal),
+		principalRepo:   make(map[string]*Principal),
+		roleRepo:        make(map[string]map[string]string),
+		resourceRepo:    make(map[string]map[string]string),
 	}
 }
 
@@ -39,7 +43,15 @@ func (manager *InMemoryPrincipalManager) Create(ctx context.Context, principal *
 		return err
 	}
 
-	manager.repository[*principal.Username] = principal
+	manager.principalRepo[*principal.Username] = principal
+
+	for _, authority := range principal.Authorities {
+		manager.roleRepo[*principal.Username][*authority.Role] = *authority.Role
+
+		for _, resource := range authority.Resources {
+			manager.resourceRepo[*principal.Username][resource] = resource
+		}
+	}
 
 	return nil
 }
@@ -49,7 +61,8 @@ func (manager *InMemoryPrincipalManager) Update(ctx context.Context, principal *
 }
 
 func (manager *InMemoryPrincipalManager) Delete(_ context.Context, username string) error {
-	delete(manager.repository, username)
+	delete(manager.principalRepo, username)
+	delete(manager.roleRepo, username)
 	return nil
 }
 
@@ -57,7 +70,7 @@ func (manager *InMemoryPrincipalManager) Find(_ context.Context, username string
 
 	var ok bool
 	var user *Principal
-	if user, ok = manager.repository[username]; !ok {
+	if user, ok = manager.principalRepo[username]; !ok {
 		return nil, errors.New("username not found")
 	}
 	return user, nil
@@ -66,28 +79,55 @@ func (manager *InMemoryPrincipalManager) Find(_ context.Context, username string
 func (manager *InMemoryPrincipalManager) Exists(_ context.Context, username string) error {
 
 	var ok bool
-	if _, ok = manager.repository[username]; !ok {
+	if _, ok = manager.principalRepo[username]; !ok {
 		return errors.New("username not found")
 	}
 	return nil
 }
 
-func (manager *InMemoryPrincipalManager) ChangePassword(ctx context.Context, principal *Principal) error {
+func (manager *InMemoryPrincipalManager) ChangePassword(ctx context.Context, username string, password string) error {
 
 	var err error
-	if err = manager.Exists(ctx, *principal.Username); err != nil {
+	var user *Principal
+	if user, err = manager.Find(ctx, username); err != nil {
 		return err
 	}
 
-	if err = manager.passwordManager.Validate(*principal.Password); err != nil {
+	if err = manager.passwordManager.Validate(password); err != nil {
 		return err
 	}
 
-	if principal.Password, err = manager.passwordManager.Encode(*principal.Password); err != nil {
+	if user.Password, err = manager.passwordManager.Encode(password); err != nil {
 		return err
 	}
 
-	manager.repository[*principal.Username] = principal
+	return nil
+}
+
+func (manager *InMemoryPrincipalManager) VerifyRole(ctx context.Context, username string, role string) error {
+
+	var err error
+	if err = manager.Exists(ctx, username); err != nil {
+		return err
+	}
+
+	if _, ok := manager.roleRepo[username][role]; !ok {
+		return errors.New("role not found")
+	}
+
+	return nil
+}
+
+func (manager *InMemoryPrincipalManager) VerifyResource(ctx context.Context, username string, resource string) error {
+
+	var err error
+	if err = manager.Exists(ctx, username); err != nil {
+		return err
+	}
+
+	if _, ok := manager.resourceRepo[username][resource]; !ok {
+		return errors.New("role not found")
+	}
 
 	return nil
 }

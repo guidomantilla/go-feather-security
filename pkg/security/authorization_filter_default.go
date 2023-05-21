@@ -1,6 +1,7 @@
 package security
 
 import (
+	"context"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +42,8 @@ func (filter *DefaultAuthorizationFilter) Authorize(ctx *gin.Context) {
 
 	var err error
 	var principal *Principal
-	if principal, err = filter.authorizationService.Authorize(ctx.Request.Context(), splits[1]); err != nil {
+	ctxWithResource := context.WithValue(ctx.Request.Context(), ResourceCtxKey{}, ctx.Request.URL.Path)
+	if principal, err = filter.authorizationService.Authorize(ctxWithResource, splits[1]); err != nil {
 		ex := rest.UnauthorizedException("invalid authorization header", err)
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return

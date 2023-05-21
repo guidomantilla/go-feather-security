@@ -2,7 +2,6 @@ package security
 
 import (
 	"context"
-	"reflect"
 
 	"go.uber.org/zap"
 )
@@ -23,13 +22,18 @@ func NewDefaultAuthorizationDelegate(principalManager PrincipalManager) *Default
 }
 
 func (delegate *DefaultAuthorizationDelegate) Authorize(ctx context.Context, principal *Principal) error {
+
 	var err error
-	var user *Principal
-	if user, err = delegate.principalManager.Find(ctx, *principal.Username); err != nil {
+	if err = delegate.principalManager.Exists(ctx, *principal.Username); err != nil {
 		return ErrFailedAuthorization
 	}
 
-	if !reflect.DeepEqual(user.Authorities, principal.Authorities) {
+	var value any
+	if value = ctx.Value(ResourceCtxKey{}); value == nil {
+		return ErrFailedAuthorization
+	}
+
+	if err = delegate.principalManager.VerifyResource(ctx, *principal.Username, value.(string)); err != nil {
 		return ErrFailedAuthorization
 	}
 
