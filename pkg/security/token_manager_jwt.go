@@ -126,24 +126,24 @@ func (manager *JwtTokenManager) Validate(tokenString string) (*Principal, error)
 		return nil, ErrTokenInvalid
 	}
 
-	if value, ok = mapClaims["authorities"]; !ok {
+	if value, ok = mapClaims["resources"]; !ok {
 		return nil, ErrTokenInvalid
 	}
 
-	var authoritiesBytes []byte
-	if authoritiesBytes, err = json.Marshal(value); err != nil {
+	var resourcesBytes []byte
+	if resourcesBytes, err = json.Marshal(value); err != nil {
 		return nil, ErrTokenInvalid
 	}
 
-	var grantedAuthorities []GrantedAuthority
-	if err = json.Unmarshal(authoritiesBytes, &grantedAuthorities); err != nil {
+	var resources []string
+	if err = json.Unmarshal(resourcesBytes, &resources); err != nil {
 		return nil, ErrTokenInvalid
 	}
 
 	principal := &Principal{
-		Username:    feather_commons_util.ValueToPtr(username),
-		Role:        feather_commons_util.ValueToPtr(role),
-		Authorities: grantedAuthorities,
+		Username:  feather_commons_util.ValueToPtr(username),
+		Role:      feather_commons_util.ValueToPtr(role),
+		Resources: resources,
 	}
 
 	return principal, nil

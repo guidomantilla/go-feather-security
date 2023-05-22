@@ -50,7 +50,7 @@ func (delegate *DefaultAuthenticationDelegate) Authenticate(ctx context.Context,
 	}
 
 	principal.Role = user.Role
-	principal.Authorities = user.Authorities
+	principal.Resources = user.Resources
 
 	return nil
 }

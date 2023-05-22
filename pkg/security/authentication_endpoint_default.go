@@ -86,7 +86,7 @@ func validate(principal *Principal) []error {
 		errors = append(errors, err)
 	}
 
-	if err := feather_security_validation.ValidateStructMustBeUndefined("this", "authorities", principal.Authorities); err != nil {
+	if err := feather_security_validation.ValidateStructMustBeUndefined("this", "resources", principal.Resources); err != nil {
 		errors = append(errors, err)
 		return errors
 	}
