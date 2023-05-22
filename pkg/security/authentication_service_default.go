@@ -35,6 +35,7 @@ func (service *DefaultAuthenticationService) Authenticate(ctx context.Context, p
 	}
 
 	principal.Password = nil
+	principal.Passphrase = nil
 	if principal.Token, err = service.tokenManager.Generate(principal); err != nil {
 		return err
 	}

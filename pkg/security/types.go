@@ -10,17 +10,17 @@ type RoleCtxKey struct{}
 type ResourceCtxKey struct{}
 
 type Principal struct {
-	Username           *string  `json:"username,omitempty" binding:"required"`
-	Role               *string  `json:"role,omitempty"`
-	Password           *string  `json:"password,omitempty" binding:"required"`
-	Passphrase         *string  `json:"passphrase,omitempty" `
-	AccountNonExpired  *bool    `json:"account_non_expired,omitempty"`
-	AccountNonLocked   *bool    `json:"account_non_locked,omitempty"`
-	PasswordNonExpired *bool    `json:"password_non_expired,omitempty"`
-	Enabled            *bool    `json:"enabled,omitempty"`
-	SignUpDone         *bool    `json:"signup_done,omitempty"`
-	Resources          []string `json:"resources,omitempty"`
-	Token              *string  `json:"token,omitempty"`
+	Username           *string   `json:"username,omitempty" binding:"required"`
+	Role               *string   `json:"role,omitempty"`
+	Password           *string   `json:"password,omitempty" binding:"required"`
+	Passphrase         *string   `json:"passphrase,omitempty" `
+	AccountNonExpired  *bool     `json:"account_non_expired,omitempty"`
+	AccountNonLocked   *bool     `json:"account_non_locked,omitempty"`
+	PasswordNonExpired *bool     `json:"password_non_expired,omitempty"`
+	Enabled            *bool     `json:"enabled,omitempty"`
+	SignUpDone         *bool     `json:"signup_done,omitempty"`
+	Resources          *[]string `json:"resources,omitempty"`
+	Token              *string   `json:"token,omitempty"`
 }
 
 type PrincipalManager interface {
