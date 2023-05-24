@@ -23,6 +23,17 @@ type Principal struct {
 	Token              *string   `json:"token,omitempty"`
 }
 
+//
+
+var (
+	_ PrincipalManager       = (*InMemoryPrincipalManager)(nil)
+	_ AuthenticationEndpoint = (*DefaultAuthenticationEndpoint)(nil)
+	_ AuthenticationService  = (*DefaultAuthenticationService)(nil)
+	_ AuthorizationFilter    = (*DefaultAuthorizationFilter)(nil)
+	_ AuthorizationService   = (*DefaultAuthorizationService)(nil)
+	_ TokenManager           = (*JwtTokenManager)(nil)
+)
+
 type PrincipalManager interface {
 	Create(ctx context.Context, principal *Principal) error
 	Update(ctx context.Context, principal *Principal) error
