@@ -279,43 +279,6 @@ func (mr *MockAuthorizationServiceMockRecorder) Authorize(ctx, tokenString inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authorize", reflect.TypeOf((*MockAuthorizationService)(nil).Authorize), ctx, tokenString)
 }
 
-// MockAuthorizationDelegate is a mock of AuthorizationDelegate interface.
-type MockAuthorizationDelegate struct {
-	ctrl     *gomock.Controller
-	recorder *MockAuthorizationDelegateMockRecorder
-}
-
-// MockAuthorizationDelegateMockRecorder is the mock recorder for MockAuthorizationDelegate.
-type MockAuthorizationDelegateMockRecorder struct {
-	mock *MockAuthorizationDelegate
-}
-
-// NewMockAuthorizationDelegate creates a new mock instance.
-func NewMockAuthorizationDelegate(ctrl *gomock.Controller) *MockAuthorizationDelegate {
-	mock := &MockAuthorizationDelegate{ctrl: ctrl}
-	mock.recorder = &MockAuthorizationDelegateMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockAuthorizationDelegate) EXPECT() *MockAuthorizationDelegateMockRecorder {
-	return m.recorder
-}
-
-// Authorize mocks base method.
-func (m *MockAuthorizationDelegate) Authorize(ctx context.Context, principal *Principal) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Authorize", ctx, principal)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Authorize indicates an expected call of Authorize.
-func (mr *MockAuthorizationDelegateMockRecorder) Authorize(ctx, principal interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authorize", reflect.TypeOf((*MockAuthorizationDelegate)(nil).Authorize), ctx, principal)
-}
-
 // MockTokenManager is a mock of TokenManager interface.
 type MockTokenManager struct {
 	ctrl     *gomock.Controller

@@ -44,7 +44,7 @@ func (filter *DefaultAuthorizationFilter) Authorize(ctx *gin.Context) {
 	var principal *Principal
 	ctxWithResource := context.WithValue(ctx.Request.Context(), ResourceCtxKey{}, strings.Join([]string{ctx.Request.Method, ctx.Request.RequestURI}, " "))
 	if principal, err = filter.authorizationService.Authorize(ctxWithResource, splits[1]); err != nil {
-		ex := feather_web_rest.UnauthorizedException("invalid authorization header", err)
+		ex := feather_web_rest.UnauthorizedException(err.Error())
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return
 	}

@@ -74,7 +74,7 @@ func (manager *JwtTokenManager) Generate(principal *Principal) (*string, error) 
 	var err error
 	var tokenString string
 	if tokenString, err = token.SignedString(manager.secretKey); err != nil {
-		return nil, err
+		return nil, ErrTokenGenerationFailed(err)
 	}
 
 	return &tokenString, nil
@@ -94,50 +94,50 @@ func (manager *JwtTokenManager) Validate(tokenString string) (*Principal, error)
 	var err error
 	var token *jwt.Token
 	if token, err = jwt.Parse(tokenString, getKeyFunc, parserOptions...); err != nil {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenFailedParsing)
 	}
 
 	if !token.Valid {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenInvalid)
 	}
 
 	var ok bool
 	var mapClaims jwt.MapClaims
 	if mapClaims, ok = token.Claims.(jwt.MapClaims); !ok {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenEmptyClaims)
 	}
 
 	var value any
 	if value, ok = mapClaims["username"]; !ok {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenEmptyUsernameClaim)
 	}
 
 	var username string
 	if username, ok = value.(string); !ok {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenEmptyUsernameClaim)
 	}
 
 	if value, ok = mapClaims["role"]; !ok {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenEmptyRoleClaim)
 	}
 
 	var role string
 	if role, ok = value.(string); !ok {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenEmptyRoleClaim)
 	}
 
 	if value, ok = mapClaims["resources"]; !ok {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenEmptyResourcesClaim)
 	}
 
 	var resourcesBytes []byte
 	if resourcesBytes, err = json.Marshal(value); err != nil {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenInvalidResourcesClaim)
 	}
 
 	var resources []string
 	if err = json.Unmarshal(resourcesBytes, &resources); err != nil {
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenValidationFailed(ErrTokenInvalidResourcesClaim)
 	}
 
 	principal := &Principal{

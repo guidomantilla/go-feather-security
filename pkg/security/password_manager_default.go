@@ -26,15 +26,36 @@ func NewDefaultPasswordManager(passwordEncoder PasswordEncoder, passwordGenerato
 }
 
 func (manager *DefaultPasswordManager) Encode(rawPassword string) (*string, error) {
-	return manager.passwordEncoder.Encode(rawPassword)
+
+	var err error
+	var password *string
+	if password, err = manager.passwordEncoder.Encode(rawPassword); err != nil {
+		return nil, ErrPasswordEncodingFailed(err)
+	}
+
+	return password, nil
 }
 
 func (manager *DefaultPasswordManager) Matches(encodedPassword string, rawPassword string) (*bool, error) {
-	return manager.passwordEncoder.Matches(encodedPassword, rawPassword)
+
+	var err error
+	var ok *bool
+	if ok, err = manager.passwordEncoder.Matches(encodedPassword, rawPassword); err != nil {
+		return nil, ErrPasswordMatchingFailed(err)
+	}
+
+	return ok, nil
 }
 
 func (manager *DefaultPasswordManager) UpgradeEncoding(encodedPassword string) (*bool, error) {
-	return manager.passwordEncoder.UpgradeEncoding(encodedPassword)
+
+	var err error
+	var ok *bool
+	if ok, err = manager.passwordEncoder.UpgradeEncoding(encodedPassword); err != nil {
+		return nil, ErrPasswordUpgradeEncodingValidationFailed(err)
+	}
+
+	return ok, nil
 }
 
 func (manager *DefaultPasswordManager) Generate() string {
@@ -42,5 +63,11 @@ func (manager *DefaultPasswordManager) Generate() string {
 }
 
 func (manager *DefaultPasswordManager) Validate(rawPassword string) error {
-	return manager.passwordGenerator.Validate(rawPassword)
+
+	var err error
+	if err = manager.passwordGenerator.Validate(rawPassword); err != nil {
+		return ErrPasswordValidationFailed(err)
+	}
+
+	return nil
 }

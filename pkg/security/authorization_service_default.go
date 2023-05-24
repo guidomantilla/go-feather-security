@@ -7,23 +7,23 @@ import (
 )
 
 type DefaultAuthorizationService struct {
-	tokenManager          TokenManager
-	authorizationDelegate AuthorizationDelegate
+	tokenManager     TokenManager
+	principalManager PrincipalManager
 }
 
-func NewDefaultAuthorizationService(tokenManager TokenManager, authorizationDelegate AuthorizationDelegate) *DefaultAuthorizationService {
+func NewDefaultAuthorizationService(tokenManager TokenManager, principalManager PrincipalManager) *DefaultAuthorizationService {
 
 	if tokenManager == nil {
 		zap.L().Fatal("starting up - error setting up authorization service: authorization delegate is nil")
 	}
 
-	if authorizationDelegate == nil {
-		zap.L().Fatal("starting up - error setting up authorization service: authorizationDelegate is nil")
+	if principalManager == nil {
+		zap.L().Fatal("starting up - error setting up authorization service:  principalManager is nil")
 	}
 
 	return &DefaultAuthorizationService{
-		tokenManager:          tokenManager,
-		authorizationDelegate: authorizationDelegate,
+		tokenManager:     tokenManager,
+		principalManager: principalManager,
 	}
 }
 
@@ -35,8 +35,23 @@ func (service *DefaultAuthorizationService) Authorize(ctx context.Context, token
 		return nil, err
 	}
 
-	if err = service.authorizationDelegate.Authorize(ctx, principal); err != nil {
-		return nil, err
+	var user *Principal
+	if user, err = service.principalManager.Find(ctx, *principal.Username); err != nil {
+		return nil, ErrAuthorizationFailed(err)
+	}
+
+	if *(user.Role) != *(principal.Role) {
+		return nil, ErrAuthorizationFailed(ErrAccountInvalidRole)
+	}
+
+	var value any
+	if value = ctx.Value(ResourceCtxKey{}); value == nil {
+		return nil, ErrAuthorizationFailed(ErrAccountEmptyAuthorities)
+	}
+
+	principal.Password, principal.Passphrase, principal.Token = nil, nil, nil
+	if err = service.principalManager.VerifyResource(ctx, *user.Username, value.(string)); err != nil {
+		return nil, ErrAuthorizationFailed(err)
 	}
 
 	return principal, nil

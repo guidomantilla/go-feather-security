@@ -66,19 +66,23 @@ func validate(principal *Principal) []error {
 		errors = append(errors, err)
 	}
 
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "account_non_expired", principal.AccountNonExpired); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "account_non_locked", principal.AccountNonLocked); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "password_non_expired", principal.PasswordNonExpired); err != nil {
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "passphrase", principal.Passphrase); err != nil {
 		errors = append(errors, err)
 	}
 
 	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "enabled", principal.Enabled); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "non_locked", principal.NonLocked); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "non_expired", principal.NonExpired); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "password_non_expired", principal.PasswordNonExpired); err != nil {
 		errors = append(errors, err)
 	}
 

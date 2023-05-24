@@ -121,15 +121,15 @@ func (generator *DefaultPasswordGenerator) Validate(rawPassword string) error {
 	}
 
 	if minSpecialCharCont < generator.minSpecialChar {
-		return errors.New("password must contain at least 2 special characters")
+		return ErrPasswordSpecialChars
 	}
 
 	if minNumCont < generator.minNum {
-		return errors.New("password must contain at least 2 numbers")
+		return ErrPasswordNumbers
 	}
 
 	if minUpperCaseCont < generator.minUpperCase {
-		return errors.New("password must contain at least 2 uppercase characters")
+		return ErrPasswordUppercaseChars
 	}
 
 	return nil

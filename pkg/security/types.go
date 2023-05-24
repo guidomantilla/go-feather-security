@@ -14,10 +14,10 @@ type Principal struct {
 	Role               *string   `json:"role,omitempty"`
 	Password           *string   `json:"password,omitempty" binding:"required"`
 	Passphrase         *string   `json:"passphrase,omitempty" `
-	AccountNonExpired  *bool     `json:"account_non_expired,omitempty"`
-	AccountNonLocked   *bool     `json:"account_non_locked,omitempty"`
-	PasswordNonExpired *bool     `json:"password_non_expired,omitempty"`
 	Enabled            *bool     `json:"enabled,omitempty"`
+	NonLocked          *bool     `json:"non_locked,omitempty"`
+	NonExpired         *bool     `json:"non_expired,omitempty"`
+	PasswordNonExpired *bool     `json:"password_non_expired,omitempty"`
 	SignUpDone         *bool     `json:"signup_done,omitempty"`
 	Resources          *[]string `json:"resources,omitempty"`
 	Token              *string   `json:"token,omitempty"`
@@ -29,6 +29,7 @@ type PrincipalManager interface {
 	Delete(ctx context.Context, username string) error
 	Find(ctx context.Context, username string) (*Principal, error)
 	Exists(ctx context.Context, username string) error
+
 	ChangePassword(ctx context.Context, username string, password string) error
 	VerifyResource(ctx context.Context, username string, resource string) error
 }
@@ -51,10 +52,6 @@ type AuthorizationFilter interface {
 
 type AuthorizationService interface {
 	Authorize(ctx context.Context, tokenString string) (*Principal, error)
-}
-
-type AuthorizationDelegate interface {
-	Authorize(ctx context.Context, principal *Principal) error
 }
 
 //

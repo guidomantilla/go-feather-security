@@ -2,7 +2,6 @@ package security
 
 import (
 	"context"
-	"errors"
 
 	"go.uber.org/zap"
 )
@@ -30,7 +29,7 @@ func (manager *InMemoryPrincipalManager) Create(ctx context.Context, principal *
 
 	var err error
 	if err = manager.Exists(ctx, *principal.Username); err == nil {
-		return errors.New("username already exists")
+		return ErrAccountExistingUsername
 	}
 
 	if err = manager.passwordManager.Validate(*principal.Password); err != nil {
@@ -66,8 +65,33 @@ func (manager *InMemoryPrincipalManager) Find(_ context.Context, username string
 	var ok bool
 	var user *Principal
 	if user, ok = manager.principalRepo[username]; !ok {
-		return nil, errors.New("username not found")
+		return nil, ErrAccountInvalidUsername
 	}
+
+	if user.Role == nil || *(user.Role) == "" {
+		return nil, ErrAccountEmptyRole
+	}
+
+	if user.Password == nil || *(user.Password) == "" {
+		return nil, ErrAccountEmptyPassword
+	}
+
+	if user.Enabled != nil && !*(user.Enabled) {
+		return nil, ErrAccountDisabled
+	}
+
+	if user.NonLocked != nil && !*(user.NonLocked) {
+		return nil, ErrAccountLocked
+	}
+
+	if user.NonExpired != nil && !*(user.NonExpired) {
+		return nil, ErrAccountExpired
+	}
+
+	if user.PasswordNonExpired != nil && !*(user.PasswordNonExpired) {
+		return nil, ErrAccountExpiredPassword
+	}
+
 	return user, nil
 }
 
@@ -75,7 +99,7 @@ func (manager *InMemoryPrincipalManager) Exists(_ context.Context, username stri
 
 	var ok bool
 	if _, ok = manager.principalRepo[username]; !ok {
-		return errors.New("username not found")
+		return ErrAccountInvalidUsername
 	}
 	return nil
 }
@@ -83,8 +107,7 @@ func (manager *InMemoryPrincipalManager) Exists(_ context.Context, username stri
 func (manager *InMemoryPrincipalManager) ChangePassword(ctx context.Context, username string, password string) error {
 
 	var err error
-	var user *Principal
-	if user, err = manager.Find(ctx, username); err != nil {
+	if err = manager.Exists(ctx, username); err != nil {
 		return err
 	}
 
@@ -92,6 +115,7 @@ func (manager *InMemoryPrincipalManager) ChangePassword(ctx context.Context, use
 		return err
 	}
 
+	user := manager.principalRepo[username]
 	if user.Password, err = manager.passwordManager.Encode(password); err != nil {
 		return err
 	}
@@ -107,7 +131,7 @@ func (manager *InMemoryPrincipalManager) VerifyResource(ctx context.Context, use
 	}
 
 	if _, ok := manager.resourceRepo[username][resource]; !ok {
-		return errors.New("resource not found")
+		return ErrAccountInvalidAuthorities
 	}
 
 	return nil

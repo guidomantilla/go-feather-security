@@ -7,37 +7,54 @@ import (
 )
 
 type DefaultAuthenticationService struct {
-	tokenManager           TokenManager
-	authenticationDelegate AuthenticationService
+	passwordEncoder  PasswordEncoder
+	principalManager PrincipalManager
+	tokenManager     TokenManager
 }
 
-func NewDefaultAuthenticationService(tokenManager TokenManager, authenticationDelegate AuthenticationService) *DefaultAuthenticationService {
+func NewDefaultAuthenticationService(passwordEncoder PasswordEncoder, principalManager PrincipalManager, tokenManager TokenManager) *DefaultAuthenticationService {
+
+	if passwordEncoder == nil {
+		zap.L().Fatal("starting up - error setting up authenticationService: passwordEncoder is nil")
+	}
+
+	if principalManager == nil {
+		zap.L().Fatal("starting up - error setting up authenticationService: principalManager is nil")
+	}
 
 	if tokenManager == nil {
 		zap.L().Fatal("starting up - error setting up authenticationService: tokenManager is nil")
 	}
 
-	if authenticationDelegate == nil {
-		zap.L().Fatal("starting up - error setting up authenticationService: authenticationDelegate is nil")
-	}
-
 	return &DefaultAuthenticationService{
-		tokenManager:           tokenManager,
-		authenticationDelegate: authenticationDelegate,
+		passwordEncoder:  passwordEncoder,
+		principalManager: principalManager,
+		tokenManager:     tokenManager,
 	}
 }
 
 func (service *DefaultAuthenticationService) Authenticate(ctx context.Context, principal *Principal) error {
 
 	var err error
-	if err = service.authenticationDelegate.Authenticate(ctx, principal); err != nil {
-		return err
+	var user *Principal
+	if user, err = service.principalManager.Find(ctx, *principal.Username); err != nil {
+		return ErrAuthenticationFailed(err)
 	}
 
-	principal.Password = nil
-	principal.Passphrase = nil
+	var needsUpgrade *bool
+	if needsUpgrade, err = service.passwordEncoder.UpgradeEncoding(*(user.Password)); err != nil || *(needsUpgrade) {
+		return ErrAuthenticationFailed(ErrAccountExpiredPassword)
+	}
+
+	var matches *bool
+	if matches, err = service.passwordEncoder.Matches(*(user.Password), *principal.Password); err != nil || !*(matches) {
+		return ErrAuthenticationFailed(ErrAccountInvalidPassword)
+	}
+
+	principal.Password, principal.Passphrase = nil, nil
+	principal.Role, principal.Resources = user.Role, user.Resources
 	if principal.Token, err = service.tokenManager.Generate(principal); err != nil {
-		return err
+		return ErrAuthenticationFailed(err)
 	}
 
 	return nil
