@@ -94,7 +94,7 @@ func (manager *JwtTokenManager) Validate(tokenString string) (*Principal, error)
 	var err error
 	var token *jwt.Token
 	if token, err = jwt.Parse(tokenString, getKeyFunc, parserOptions...); err != nil {
-		return nil, ErrTokenValidationFailed(ErrTokenFailedParsing)
+		return nil, ErrTokenValidationFailed(ErrTokenFailedParsing, err)
 	}
 
 	if !token.Valid {
