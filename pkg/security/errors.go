@@ -21,6 +21,7 @@ var (
 	ErrAccountExpiredPassword     = errors.New("principal password has expired")
 	ErrAccountEmptyAuthorities    = errors.New("principal authorities are empty")
 	ErrAccountInvalidAuthorities  = errors.New("principal authorities are invalid")
+	ErrAccountEmptyResource       = errors.New("principal resource is empty")
 	ErrTokenFailedParsing         = errors.New("token failed to parse")
 	ErrTokenInvalid               = errors.New("token is invalid")
 	ErrTokenEmptyClaims           = errors.New("token claims is empty")

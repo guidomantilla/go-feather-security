@@ -49,8 +49,14 @@ func (service *DefaultAuthorizationService) Authorize(ctx context.Context, token
 		return nil, ErrAuthorizationFailed(ErrAccountEmptyAuthorities)
 	}
 
+	var ok bool
+	var resource string
+	if resource, ok = value.(string); !ok {
+		return nil, ErrAuthorizationFailed(ErrAccountEmptyResource)
+	}
+
 	principal.Password, principal.Passphrase, principal.Token = nil, nil, nil
-	if err = service.principalManager.VerifyResource(ctx, *user.Username, value.(string)); err != nil {
+	if err = service.principalManager.VerifyResource(ctx, *user.Username, resource); err != nil {
 		return nil, ErrAuthorizationFailed(err)
 	}
 
