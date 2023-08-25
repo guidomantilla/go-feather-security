@@ -29,7 +29,7 @@ type DefaultPasswordGenerator struct {
 func NewDefaultPasswordGenerator(options ...DefaultPasswordGeneratorOption) *DefaultPasswordGenerator {
 
 	generator := &DefaultPasswordGenerator{
-		passwordLength: 15,
+		passwordLength: 16,
 		minSpecialChar: 2,
 		minNum:         2,
 		minUpperCase:   2,
