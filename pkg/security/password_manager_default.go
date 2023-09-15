@@ -1,7 +1,8 @@
 package security
 
 import (
-	"go.uber.org/zap"
+	"log/slog"
+	"os"
 )
 
 type DefaultPasswordManager struct {
@@ -12,11 +13,13 @@ type DefaultPasswordManager struct {
 func NewDefaultPasswordManager(passwordEncoder PasswordEncoder, passwordGenerator PasswordGenerator) *DefaultPasswordManager {
 
 	if passwordEncoder == nil {
-		zap.L().Fatal("starting up - error setting up passwordManager: passwordEncoder is nil")
+		slog.Error("starting up - error setting up passwordManager: passwordEncoder is nil")
+		os.Exit(1)
 	}
 
 	if passwordGenerator == nil {
-		zap.L().Fatal("starting up - error setting up passwordManager: passwordGenerator is nil")
+		slog.Error("starting up - error setting up passwordManager: passwordGenerator is nil")
+		os.Exit(1)
 	}
 
 	return &DefaultPasswordManager{

@@ -2,8 +2,8 @@ package security
 
 import (
 	"context"
-
-	"go.uber.org/zap"
+	"log/slog"
+	"os"
 )
 
 type DefaultAuthenticationService struct {
@@ -15,15 +15,18 @@ type DefaultAuthenticationService struct {
 func NewDefaultAuthenticationService(passwordEncoder PasswordEncoder, principalManager PrincipalManager, tokenManager TokenManager) *DefaultAuthenticationService {
 
 	if passwordEncoder == nil {
-		zap.L().Fatal("starting up - error setting up authenticationService: passwordEncoder is nil")
+		slog.Error("starting up - error setting up authenticationService: passwordEncoder is nil")
+		os.Exit(1)
 	}
 
 	if principalManager == nil {
-		zap.L().Fatal("starting up - error setting up authenticationService: principalManager is nil")
+		slog.Error("starting up - error setting up authenticationService: principalManager is nil")
+		os.Exit(1)
 	}
 
 	if tokenManager == nil {
-		zap.L().Fatal("starting up - error setting up authenticationService: tokenManager is nil")
+		slog.Error("starting up - error setting up authenticationService: tokenManager is nil")
+		os.Exit(1)
 	}
 
 	return &DefaultAuthenticationService{

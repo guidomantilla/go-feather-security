@@ -1,9 +1,9 @@
 package security
 
 import (
+	"log/slog"
+	"os"
 	"strings"
-
-	"go.uber.org/zap"
 )
 
 var SupportedDecoders = map[string]PasswordEncoder{
@@ -23,7 +23,8 @@ type DelegatingPasswordEncoder struct {
 func NewDelegatingPasswordEncoder(encoder PasswordEncoder, options ...DelegatingPasswordEncoderOption) *DelegatingPasswordEncoder {
 
 	if encoder == nil {
-		zap.L().Fatal("starting up - error setting up delegating password encoder: encoder is nil")
+		slog.Error("starting up - error setting up delegating password encoder: encoder is nil")
+		os.Exit(1)
 	}
 
 	delegator := &DelegatingPasswordEncoder{

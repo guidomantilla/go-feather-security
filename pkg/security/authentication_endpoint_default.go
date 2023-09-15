@@ -1,11 +1,12 @@
 package security
 
 import (
+	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	feather_web_rest "github.com/guidomantilla/go-feather-web/pkg/rest"
-	"go.uber.org/zap"
 
 	feather_security_validation "github.com/guidomantilla/go-feather-security/pkg/validation"
 )
@@ -17,7 +18,8 @@ type DefaultAuthenticationEndpoint struct {
 func NewDefaultAuthenticationEndpoint(authenticationService AuthenticationService) *DefaultAuthenticationEndpoint {
 
 	if authenticationService == nil {
-		zap.L().Fatal("starting up - error setting up authenticationEndpoint: authenticationService is nil")
+		slog.Error("starting up - error setting up authenticationEndpoint: authenticationService is nil")
+		os.Exit(1)
 	}
 
 	return &DefaultAuthenticationEndpoint{

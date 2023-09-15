@@ -2,8 +2,8 @@ package security
 
 import (
 	"context"
-
-	"go.uber.org/zap"
+	"log/slog"
+	"os"
 )
 
 type DefaultAuthorizationService struct {
@@ -14,11 +14,13 @@ type DefaultAuthorizationService struct {
 func NewDefaultAuthorizationService(tokenManager TokenManager, principalManager PrincipalManager) *DefaultAuthorizationService {
 
 	if tokenManager == nil {
-		zap.L().Fatal("starting up - error setting up authorization service: authorization delegate is nil")
+		slog.Error("starting up - error setting up authorization service: authorization delegate is nil")
+		os.Exit(1)
 	}
 
 	if principalManager == nil {
-		zap.L().Fatal("starting up - error setting up authorization service:  principalManager is nil")
+		slog.Error("starting up - error setting up authorization service:  principalManager is nil")
+		os.Exit(1)
 	}
 
 	return &DefaultAuthorizationService{

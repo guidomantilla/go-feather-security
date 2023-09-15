@@ -6,10 +6,9 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/golang/mock v1.6.0
-	github.com/guidomantilla/go-feather-commons v0.5.0
-	github.com/guidomantilla/go-feather-web v0.5.0
+	github.com/guidomantilla/go-feather-commons v0.5.1
+	github.com/guidomantilla/go-feather-web v0.5.1
 	go.uber.org/multierr v1.11.0
-	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.13.0
 	golang.org/x/net v0.15.0
 )

@@ -2,8 +2,8 @@ package security
 
 import (
 	"context"
-
-	"go.uber.org/zap"
+	"log/slog"
+	"os"
 )
 
 type InMemoryPrincipalManager struct {
@@ -15,7 +15,8 @@ type InMemoryPrincipalManager struct {
 func NewInMemoryPrincipalManager(passwordManager PasswordManager) *InMemoryPrincipalManager {
 
 	if passwordManager == nil {
-		zap.L().Fatal("starting up - error setting up principalManager: passwordManager is nil")
+		slog.Error("starting up - error setting up principalManager: passwordManager is nil")
+		os.Exit(1)
 	}
 
 	return &InMemoryPrincipalManager{
