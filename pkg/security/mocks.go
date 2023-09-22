@@ -169,20 +169,6 @@ func (mr *MockAuthenticationEndpointMockRecorder) Authenticate(ctx interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authenticate", reflect.TypeOf((*MockAuthenticationEndpoint)(nil).Authenticate), ctx)
 }
 
-// Validate mocks base method.
-func (m *MockAuthenticationEndpoint) Validate(principal *Principal) []error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Validate", principal)
-	ret0, _ := ret[0].([]error)
-	return ret0
-}
-
-// Validate indicates an expected call of Validate.
-func (mr *MockAuthenticationEndpointMockRecorder) Validate(principal interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Validate", reflect.TypeOf((*MockAuthenticationEndpoint)(nil).Validate), principal)
-}
-
 // MockAuthenticationService is a mock of AuthenticationService interface.
 type MockAuthenticationService struct {
 	ctrl     *gomock.Controller
@@ -218,6 +204,20 @@ func (m *MockAuthenticationService) Authenticate(ctx context.Context, principal 
 func (mr *MockAuthenticationServiceMockRecorder) Authenticate(ctx, principal interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authenticate", reflect.TypeOf((*MockAuthenticationService)(nil).Authenticate), ctx, principal)
+}
+
+// Validate mocks base method.
+func (m *MockAuthenticationService) Validate(principal *Principal) []error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Validate", principal)
+	ret0, _ := ret[0].([]error)
+	return ret0
+}
+
+// Validate indicates an expected call of Validate.
+func (mr *MockAuthenticationServiceMockRecorder) Validate(principal interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Validate", reflect.TypeOf((*MockAuthenticationService)(nil).Validate), principal)
 }
 
 // MockAuthorizationFilter is a mock of AuthorizationFilter interface.

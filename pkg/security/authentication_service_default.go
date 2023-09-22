@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"os"
+
+	feather_security_validation "github.com/guidomantilla/go-feather-security/pkg/validation"
 )
 
 type DefaultAuthenticationService struct {
@@ -61,4 +63,56 @@ func (service *DefaultAuthenticationService) Authenticate(ctx context.Context, p
 	}
 
 	return nil
+}
+
+func (service *DefaultAuthenticationService) Validate(principal *Principal) []error {
+
+	var errors []error
+
+	if err := feather_security_validation.ValidateFieldIsRequired("this", "username", principal.Username); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "role", principal.Role); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldIsRequired("this", "password", principal.Password); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "passphrase", principal.Passphrase); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "enabled", principal.Enabled); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "non_locked", principal.NonLocked); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "non_expired", principal.NonExpired); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "password_non_expired", principal.PasswordNonExpired); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "signup_done", principal.SignUpDone); err != nil {
+		errors = append(errors, err)
+	}
+
+	if err := feather_security_validation.ValidateStructMustBeUndefined("this", "resources", principal.Resources); err != nil {
+		errors = append(errors, err)
+		return errors
+	}
+
+	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "token", principal.Token); err != nil {
+		errors = append(errors, err)
+	}
+
+	return errors
 }

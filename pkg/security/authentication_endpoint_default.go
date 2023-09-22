@@ -7,8 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	feather_web_rest "github.com/guidomantilla/go-feather-web/pkg/rest"
-
-	feather_security_validation "github.com/guidomantilla/go-feather-security/pkg/validation"
 )
 
 type DefaultAuthenticationEndpoint struct {
@@ -37,7 +35,7 @@ func (endpoint *DefaultAuthenticationEndpoint) Authenticate(ctx *gin.Context) {
 		return
 	}
 
-	if errs := endpoint.Validate(principal); errs != nil {
+	if errs := endpoint.authenticationService.Validate(principal); errs != nil {
 		ex := feather_web_rest.BadRequestException("error validating the principal", errs...)
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return
@@ -50,56 +48,4 @@ func (endpoint *DefaultAuthenticationEndpoint) Authenticate(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, principal)
-}
-
-func (endpoint *DefaultAuthenticationEndpoint) Validate(principal *Principal) []error {
-
-	var errors []error
-
-	if err := feather_security_validation.ValidateFieldIsRequired("this", "username", principal.Username); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "role", principal.Role); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldIsRequired("this", "password", principal.Password); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "passphrase", principal.Passphrase); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "enabled", principal.Enabled); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "non_locked", principal.NonLocked); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "non_expired", principal.NonExpired); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "password_non_expired", principal.PasswordNonExpired); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "signup_done", principal.SignUpDone); err != nil {
-		errors = append(errors, err)
-	}
-
-	if err := feather_security_validation.ValidateStructMustBeUndefined("this", "resources", principal.Resources); err != nil {
-		errors = append(errors, err)
-		return errors
-	}
-
-	if err := feather_security_validation.ValidateFieldMustBeUndefined("this", "token", principal.Token); err != nil {
-		errors = append(errors, err)
-	}
-
-	return errors
 }
