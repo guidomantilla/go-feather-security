@@ -6,9 +6,8 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/golang/mock v1.6.0
-	github.com/guidomantilla/go-feather-commons v0.5.1
+	github.com/guidomantilla/go-feather-commons v0.5.2
 	github.com/guidomantilla/go-feather-web v0.5.1
-	go.uber.org/multierr v1.11.0
 	golang.org/x/crypto v0.13.0
 	golang.org/x/net v0.15.0
 )
@@ -41,7 +40,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-//replace (
-//	github.com/guidomantilla/go-feather-commons => ../go-feather-commons
-//	github.com/guidomantilla/go-feather-web => ../go-feather-web
-//)
+replace (
+	github.com/guidomantilla/go-feather-commons => ../go-feather-commons
+	github.com/guidomantilla/go-feather-web => ../go-feather-web
+)

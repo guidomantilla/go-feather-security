@@ -2,7 +2,6 @@ package security
 
 import (
 	"crypto/rand"
-	"errors"
 	"math/big"
 	math "math/rand"
 	"strings"
@@ -102,7 +101,7 @@ func (generator *DefaultPasswordGenerator) Generate() string {
 func (generator *DefaultPasswordGenerator) Validate(rawPassword string) error {
 
 	if len(rawPassword) < generator.passwordLength {
-		return errors.New("password length is too short")
+		return ErrPasswordLength
 	}
 
 	minSpecialCharCont := 0

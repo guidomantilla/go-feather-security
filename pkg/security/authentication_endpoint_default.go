@@ -37,7 +37,7 @@ func (endpoint *DefaultAuthenticationEndpoint) Authenticate(ctx *gin.Context) {
 		return
 	}
 
-	if errs := validate(principal); errs != nil {
+	if errs := endpoint.Validate(principal); errs != nil {
 		ex := feather_web_rest.BadRequestException("error validating the principal", errs...)
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return
@@ -52,7 +52,7 @@ func (endpoint *DefaultAuthenticationEndpoint) Authenticate(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, principal)
 }
 
-func validate(principal *Principal) []error {
+func (endpoint *DefaultAuthenticationEndpoint) Validate(principal *Principal) []error {
 
 	var errors []error
 

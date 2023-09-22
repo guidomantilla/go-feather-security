@@ -49,6 +49,7 @@ type PrincipalManager interface {
 
 type AuthenticationEndpoint interface {
 	Authenticate(ctx *gin.Context)
+	Validate(principal *Principal) []error
 }
 
 type AuthenticationService interface {

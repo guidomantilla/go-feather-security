@@ -2,8 +2,6 @@ package security
 
 import (
 	"errors"
-
-	"go.uber.org/multierr"
 )
 
 var (
@@ -32,6 +30,7 @@ var (
 	ErrTokenEmptyResourcesClaim   = errors.New("token resources claim is empty")
 	ErrTokenInvalidResourcesClaim = errors.New("token resources claim is invalid")
 	ErrPasswordEncoderNotFound    = errors.New("password encoder not found")
+	ErrPasswordLength             = errors.New("password length is too short")
 	ErrPasswordSpecialChars       = errors.New("password must contain at least 2 special characters")
 	ErrPasswordNumbers            = errors.New("password must contain at least 2 numbers")
 	ErrPasswordUppercaseChars     = errors.New("password must contain at least 2 uppercase characters")
@@ -45,33 +44,33 @@ var (
 )
 
 func ErrAuthenticationFailed(errs ...error) error {
-	return errors.New("authentication failed: " + multierr.Combine(errs...).Error())
+	return errors.New("authentication failed: " + errors.Join(errs...).Error())
 }
 
 func ErrAuthorizationFailed(errs ...error) error {
-	return errors.New("authorization failed: " + multierr.Combine(errs...).Error())
+	return errors.New("authorization failed: " + errors.Join(errs...).Error())
 }
 
 func ErrTokenGenerationFailed(errs ...error) error {
-	return errors.New("token generation failed: " + multierr.Combine(errs...).Error())
+	return errors.New("token generation failed: " + errors.Join(errs...).Error())
 }
 
 func ErrTokenValidationFailed(errs ...error) error {
-	return errors.New("token validation failed: " + multierr.Combine(errs...).Error())
+	return errors.New("token validation failed: " + errors.Join(errs...).Error())
 }
 
 func ErrPasswordEncodingFailed(errs ...error) error {
-	return errors.New("password encoding failed: " + multierr.Combine(errs...).Error())
+	return errors.New("password encoding failed: " + errors.Join(errs...).Error())
 }
 
 func ErrPasswordMatchingFailed(errs ...error) error {
-	return errors.New("password matching failed: " + multierr.Combine(errs...).Error())
+	return errors.New("password matching failed: " + errors.Join(errs...).Error())
 }
 
 func ErrPasswordUpgradeEncodingValidationFailed(errs ...error) error {
-	return errors.New("password upgrade encoding validation failed: " + multierr.Combine(errs...).Error())
+	return errors.New("password upgrade encoding validation failed: " + errors.Join(errs...).Error())
 }
 
 func ErrPasswordValidationFailed(errs ...error) error {
-	return errors.New("password validation failed: " + multierr.Combine(errs...).Error())
+	return errors.New("password validation failed: " + errors.Join(errs...).Error())
 }
