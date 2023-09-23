@@ -2,8 +2,8 @@ package security
 
 import (
 	"context"
-	"log/slog"
-	"os"
+
+	feather_commons_log "github.com/guidomantilla/go-feather-commons/pkg/log"
 )
 
 type DefaultAuthorizationService struct {
@@ -14,13 +14,11 @@ type DefaultAuthorizationService struct {
 func NewDefaultAuthorizationService(tokenManager TokenManager, principalManager PrincipalManager) *DefaultAuthorizationService {
 
 	if tokenManager == nil {
-		slog.Error("starting up - error setting up authorization service: authorization delegate is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up authorization service: authorization delegate is nil")
 	}
 
 	if principalManager == nil {
-		slog.Error("starting up - error setting up authorization service:  principalManager is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up authorization service:  principalManager is nil")
 	}
 
 	return &DefaultAuthorizationService{

@@ -1,8 +1,7 @@
 package security
 
 import (
-	"log/slog"
-	"os"
+	feather_commons_log "github.com/guidomantilla/go-feather-commons/pkg/log"
 )
 
 type DefaultPasswordManager struct {
@@ -13,13 +12,11 @@ type DefaultPasswordManager struct {
 func NewDefaultPasswordManager(passwordEncoder PasswordEncoder, passwordGenerator PasswordGenerator) *DefaultPasswordManager {
 
 	if passwordEncoder == nil {
-		slog.Error("starting up - error setting up passwordManager: passwordEncoder is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up passwordManager: passwordEncoder is nil")
 	}
 
 	if passwordGenerator == nil {
-		slog.Error("starting up - error setting up passwordManager: passwordGenerator is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up passwordManager: passwordGenerator is nil")
 	}
 
 	return &DefaultPasswordManager{

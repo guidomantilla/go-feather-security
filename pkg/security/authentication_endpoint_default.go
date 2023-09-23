@@ -1,11 +1,10 @@
 package security
 
 import (
-	"log/slog"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
+	feather_commons_log "github.com/guidomantilla/go-feather-commons/pkg/log"
 	feather_web_rest "github.com/guidomantilla/go-feather-web/pkg/rest"
 )
 
@@ -16,8 +15,7 @@ type DefaultAuthenticationEndpoint struct {
 func NewDefaultAuthenticationEndpoint(authenticationService AuthenticationService) *DefaultAuthenticationEndpoint {
 
 	if authenticationService == nil {
-		slog.Error("starting up - error setting up authenticationEndpoint: authenticationService is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up authenticationEndpoint: authenticationService is nil")
 	}
 
 	return &DefaultAuthenticationEndpoint{

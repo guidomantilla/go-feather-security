@@ -2,8 +2,8 @@ package security
 
 import (
 	"context"
-	"log/slog"
-	"os"
+
+	feather_commons_log "github.com/guidomantilla/go-feather-commons/pkg/log"
 )
 
 type InMemoryPrincipalManager struct {
@@ -15,8 +15,7 @@ type InMemoryPrincipalManager struct {
 func NewInMemoryPrincipalManager(passwordManager PasswordManager) *InMemoryPrincipalManager {
 
 	if passwordManager == nil {
-		slog.Error("starting up - error setting up principalManager: passwordManager is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up principalManager: passwordManager is nil")
 	}
 
 	return &InMemoryPrincipalManager{

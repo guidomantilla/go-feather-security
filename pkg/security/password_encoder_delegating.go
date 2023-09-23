@@ -1,9 +1,9 @@
 package security
 
 import (
-	"log/slog"
-	"os"
 	"strings"
+
+	feather_commons_log "github.com/guidomantilla/go-feather-commons/pkg/log"
 )
 
 var SupportedDecoders = map[string]PasswordEncoder{
@@ -23,8 +23,7 @@ type DelegatingPasswordEncoder struct {
 func NewDelegatingPasswordEncoder(encoder PasswordEncoder, options ...DelegatingPasswordEncoderOption) *DelegatingPasswordEncoder {
 
 	if encoder == nil {
-		slog.Error("starting up - error setting up delegating password encoder: encoder is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up delegating password encoder: encoder is nil")
 	}
 
 	delegator := &DelegatingPasswordEncoder{

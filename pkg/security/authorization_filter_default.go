@@ -2,11 +2,10 @@ package security
 
 import (
 	"context"
-	"log/slog"
-	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	feather_commons_log "github.com/guidomantilla/go-feather-commons/pkg/log"
 	feather_web_rest "github.com/guidomantilla/go-feather-web/pkg/rest"
 )
 
@@ -17,8 +16,7 @@ type DefaultAuthorizationFilter struct {
 func NewDefaultAuthorizationFilter(authorizationService AuthorizationService) *DefaultAuthorizationFilter {
 
 	if authorizationService == nil {
-		slog.Error("starting up - error setting up authorizationFilter: authorizationService is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up authorizationFilter: authorizationService is nil")
 	}
 
 	return &DefaultAuthorizationFilter{

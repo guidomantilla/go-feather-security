@@ -2,8 +2,8 @@ package security
 
 import (
 	"context"
-	"log/slog"
-	"os"
+
+	feather_commons_log "github.com/guidomantilla/go-feather-commons/pkg/log"
 
 	feather_security_validation "github.com/guidomantilla/go-feather-security/pkg/validation"
 )
@@ -17,18 +17,15 @@ type DefaultAuthenticationService struct {
 func NewDefaultAuthenticationService(passwordEncoder PasswordEncoder, principalManager PrincipalManager, tokenManager TokenManager) *DefaultAuthenticationService {
 
 	if passwordEncoder == nil {
-		slog.Error("starting up - error setting up authenticationService: passwordEncoder is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up authenticationService: passwordEncoder is nil")
 	}
 
 	if principalManager == nil {
-		slog.Error("starting up - error setting up authenticationService: principalManager is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up authenticationService: principalManager is nil")
 	}
 
 	if tokenManager == nil {
-		slog.Error("starting up - error setting up authenticationService: tokenManager is nil")
-		os.Exit(1)
+		feather_commons_log.Fatal("starting up - error setting up authenticationService: tokenManager is nil")
 	}
 
 	return &DefaultAuthenticationService{
