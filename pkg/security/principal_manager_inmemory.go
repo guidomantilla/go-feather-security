@@ -43,7 +43,7 @@ func (manager *InMemoryPrincipalManager) Create(ctx context.Context, principal *
 	manager.principalRepo[*principal.Username] = principal
 	manager.resourceRepo[*principal.Username] = make(map[string]string)
 
-	for _, resource := range *principal.Resources {
+	for _, resource := range principal.Resources {
 		manager.resourceRepo[*principal.Username][resource] = resource
 	}
 

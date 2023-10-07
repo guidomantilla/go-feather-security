@@ -95,7 +95,7 @@ func (encoder *ScryptPasswordEncoder) Matches(encodedPassword string, rawPasswor
 	}
 
 	var newEncodedPassword *string
-	if newEncodedPassword, err = ScryptEncode(rawPassword, *salt, *N, *r, *p, len(*key)); err != nil {
+	if newEncodedPassword, err = ScryptEncode(rawPassword, salt, *N, *r, *p, len(key)); err != nil {
 		return nil, err
 	}
 
@@ -132,11 +132,11 @@ func (encoder *ScryptPasswordEncoder) UpgradeEncoding(encodedPassword string) (*
 		return &upgradeNeeded, nil
 	}
 
-	if encoder.saltLength > len(*salt) {
+	if encoder.saltLength > len(salt) {
 		return &upgradeNeeded, nil
 	}
 
-	if encoder.keyLength > len(*key) {
+	if encoder.keyLength > len(key) {
 		return &upgradeNeeded, nil
 	}
 

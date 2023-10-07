@@ -97,7 +97,7 @@ func (encoder *Argon2PasswordEncoder) Matches(encodedPassword string, rawPasswor
 	}
 
 	var newEncodedPassword *string
-	if newEncodedPassword, err = Argon2Encode(rawPassword, *salt, *iterations, *memory, *threads, len(*key)); err != nil {
+	if newEncodedPassword, err = Argon2Encode(rawPassword, salt, *iterations, *memory, *threads, len(key)); err != nil {
 		return nil, err
 	}
 
@@ -138,11 +138,11 @@ func (encoder *Argon2PasswordEncoder) UpgradeEncoding(encodedPassword string) (*
 		return &upgradeNeeded, nil
 	}
 
-	if encoder.saltLength > len(*salt) {
+	if encoder.saltLength > len(salt) {
 		return &upgradeNeeded, nil
 	}
 
-	if encoder.keyLength > len(*key) {
+	if encoder.keyLength > len(key) {
 		return &upgradeNeeded, nil
 	}
 

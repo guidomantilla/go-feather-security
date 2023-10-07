@@ -10,17 +10,17 @@ type RoleCtxKey struct{}
 type ResourceCtxKey struct{}
 
 type Principal struct {
-	Username           *string   `json:"username,omitempty" binding:"required"`
-	Role               *string   `json:"role,omitempty"`
-	Password           *string   `json:"password,omitempty" binding:"required"`
-	Passphrase         *string   `json:"passphrase,omitempty" `
-	Enabled            *bool     `json:"enabled,omitempty"`
-	NonLocked          *bool     `json:"non_locked,omitempty"`
-	NonExpired         *bool     `json:"non_expired,omitempty"`
-	PasswordNonExpired *bool     `json:"password_non_expired,omitempty"`
-	SignUpDone         *bool     `json:"signup_done,omitempty"`
-	Resources          *[]string `json:"resources,omitempty"`
-	Token              *string   `json:"token,omitempty"`
+	Username           *string  `json:"username,omitempty" binding:"required"`
+	Role               *string  `json:"role,omitempty"`
+	Password           *string  `json:"password,omitempty" binding:"required"`
+	Passphrase         *string  `json:"passphrase,omitempty" `
+	Enabled            *bool    `json:"enabled,omitempty"`
+	NonLocked          *bool    `json:"non_locked,omitempty"`
+	NonExpired         *bool    `json:"non_expired,omitempty"`
+	PasswordNonExpired *bool    `json:"password_non_expired,omitempty"`
+	SignUpDone         *bool    `json:"signup_done,omitempty"`
+	Resources          []string `json:"resources,omitempty"`
+	Token              *string  `json:"token,omitempty"`
 }
 
 //

@@ -2,6 +2,8 @@ package security
 
 import (
 	"errors"
+
+	feather_commons_errors "github.com/guidomantilla/go-feather-commons/pkg/errors"
 )
 
 var (
@@ -44,33 +46,33 @@ var (
 )
 
 func ErrAuthenticationFailed(errs ...error) error {
-	return errors.New("authentication failed: " + errors.Join(errs...).Error())
+	return errors.New("authentication failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }
 
 func ErrAuthorizationFailed(errs ...error) error {
-	return errors.New("authorization failed: " + errors.Join(errs...).Error())
+	return errors.New("authorization failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }
 
 func ErrTokenGenerationFailed(errs ...error) error {
-	return errors.New("token generation failed: " + errors.Join(errs...).Error())
+	return errors.New("token generation failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }
 
 func ErrTokenValidationFailed(errs ...error) error {
-	return errors.New("token validation failed: " + errors.Join(errs...).Error())
+	return errors.New("token validation failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }
 
 func ErrPasswordEncodingFailed(errs ...error) error {
-	return errors.New("password encoding failed: " + errors.Join(errs...).Error())
+	return errors.New("password encoding failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }
 
 func ErrPasswordMatchingFailed(errs ...error) error {
-	return errors.New("password matching failed: " + errors.Join(errs...).Error())
+	return errors.New("password matching failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }
 
 func ErrPasswordUpgradeEncodingValidationFailed(errs ...error) error {
-	return errors.New("password upgrade encoding validation failed: " + errors.Join(errs...).Error())
+	return errors.New("password upgrade encoding validation failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }
 
 func ErrPasswordValidationFailed(errs ...error) error {
-	return errors.New("password validation failed: " + errors.Join(errs...).Error())
+	return errors.New("password validation failed: " + feather_commons_errors.ErrJoin(errs...).Error())
 }

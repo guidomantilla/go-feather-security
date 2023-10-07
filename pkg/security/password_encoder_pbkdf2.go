@@ -91,7 +91,7 @@ func (encoder *Pbkdf2PasswordEncoder) Matches(encodedPassword string, rawPasswor
 	}
 
 	var newEncodedPassword *string
-	if newEncodedPassword, err = Pbkdf2Encode(rawPassword, *salt, *iterations, len(*key), encoder.hashFunc); err != nil {
+	if newEncodedPassword, err = Pbkdf2Encode(rawPassword, salt, *iterations, len(key), encoder.hashFunc); err != nil {
 		return nil, err
 	}
 
@@ -120,11 +120,11 @@ func (encoder *Pbkdf2PasswordEncoder) UpgradeEncoding(encodedPassword string) (*
 		return &upgradeNeeded, nil
 	}
 
-	if encoder.saltLength > len(*salt) {
+	if encoder.saltLength > len(salt) {
 		return &upgradeNeeded, nil
 	}
 
-	if encoder.keyLength > len(*key) {
+	if encoder.keyLength > len(key) {
 		return &upgradeNeeded, nil
 	}
 

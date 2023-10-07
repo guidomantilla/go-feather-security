@@ -54,7 +54,7 @@ func Pbkdf2Encode(rawPassword string, salt []byte, iterations int, keyLength int
 	return &encodedPassword, nil
 }
 
-func Pbkdf2Decode(encodedPassword string) (*string, *int, *[]byte, *[]byte, error) {
+func Pbkdf2Decode(encodedPassword string) (*string, *int, []byte, []byte, error) {
 
 	if encodedPassword == "" {
 		return nil, nil, nil, nil, ErrEncodedPasswordIsEmpty
@@ -88,7 +88,7 @@ func Pbkdf2Decode(encodedPassword string) (*string, *int, *[]byte, *[]byte, erro
 		return nil, nil, nil, nil, ErrEncodedPasswordNotAllowed
 	}
 
-	return &prefix, &iterations, &salt, &key, nil
+	return &prefix, &iterations, salt, key, nil
 
 }
 
@@ -119,7 +119,7 @@ func ScryptEncode(rawPassword string, salt []byte, N int, r int, p int, keyLen i
 	return &encodedPassword, nil
 }
 
-func ScryptDecode(encodedPassword string) (*string, *int, *int, *int, *[]byte, *[]byte, error) {
+func ScryptDecode(encodedPassword string) (*string, *int, *int, *int, []byte, []byte, error) {
 
 	if encodedPassword == "" {
 		return nil, nil, nil, nil, nil, nil, ErrEncodedPasswordIsEmpty
@@ -163,7 +163,7 @@ func ScryptDecode(encodedPassword string) (*string, *int, *int, *int, *[]byte, *
 		return nil, nil, nil, nil, nil, nil, ErrEncodedPasswordNotAllowed
 	}
 
-	return &prefix, &N, &r, &p, &salt, &key, nil
+	return &prefix, &N, &r, &p, salt, key, nil
 
 }
 
@@ -190,7 +190,7 @@ func Argon2Encode(rawPassword string, salt []byte, iterations int, memory int, t
 	return &encodedPassword, nil
 }
 
-func Argon2Decode(encodedPassword string) (*string, *int, *int, *int, *int, *[]byte, *[]byte, error) {
+func Argon2Decode(encodedPassword string) (*string, *int, *int, *int, *int, []byte, []byte, error) {
 
 	if encodedPassword == "" {
 		return nil, nil, nil, nil, nil, nil, nil, ErrEncodedPasswordIsEmpty
@@ -239,6 +239,6 @@ func Argon2Decode(encodedPassword string) (*string, *int, *int, *int, *int, *[]b
 		return nil, nil, nil, nil, nil, nil, nil, ErrEncodedPasswordNotAllowed
 	}
 
-	return &prefix, &version, &iterations, &memory, &threads, &salt, &key, nil
+	return &prefix, &version, &iterations, &memory, &threads, salt, key, nil
 
 }
