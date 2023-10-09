@@ -5,8 +5,6 @@ import (
 	"golang.org/x/net/context"
 )
 
-type RoleCtxKey struct{}
-
 type ResourceCtxKey struct{}
 
 type Principal struct {

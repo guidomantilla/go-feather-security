@@ -55,10 +55,10 @@ func (service *DefaultAuthorizationService) Authorize(ctx context.Context, token
 		return nil, ErrAuthorizationFailed(ErrAccountEmptyResource)
 	}
 
-	principal.Password, principal.Passphrase, principal.Token = nil, nil, nil
 	if err = service.principalManager.VerifyResource(ctx, *user.Username, resource); err != nil {
 		return nil, ErrAuthorizationFailed(err)
 	}
 
+	principal.Password, principal.Passphrase, principal.Token = nil, nil, &tokenString
 	return principal, nil
 }

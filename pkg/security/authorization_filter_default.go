@@ -49,6 +49,6 @@ func (filter *DefaultAuthorizationFilter) Authorize(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Set("principal", principal)
+	AddPrincipalToContext(ctx, principal)
 	ctx.Next()
 }
