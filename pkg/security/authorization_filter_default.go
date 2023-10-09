@@ -39,11 +39,20 @@ func (filter *DefaultAuthorizationFilter) Authorize(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return
 	}
+	token := splits[1]
+
+	resource := []string{ctx.Request.Method, ctx.Request.RequestURI}
+
+	var exists bool
+	var application string
+	if application, exists = GetApplicationFromContext(ctx); exists {
+		resource = []string{application, ctx.Request.Method, ctx.Request.RequestURI}
+	}
 
 	var err error
 	var principal *Principal
-	ctxWithResource := context.WithValue(ctx.Request.Context(), ResourceCtxKey{}, strings.Join([]string{ctx.Request.Method, ctx.Request.RequestURI}, " "))
-	if principal, err = filter.authorizationService.Authorize(ctxWithResource, splits[1]); err != nil {
+	ctxWithResource := context.WithValue(ctx.Request.Context(), ResourceCtxKey{}, strings.Join(resource, " "))
+	if principal, err = filter.authorizationService.Authorize(ctxWithResource, token); err != nil {
 		ex := feather_web_rest.UnauthorizedException(err.Error())
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return
