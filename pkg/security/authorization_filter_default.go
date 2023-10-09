@@ -41,13 +41,13 @@ func (filter *DefaultAuthorizationFilter) Authorize(ctx *gin.Context) {
 	}
 	token := splits[1]
 
-	resource := []string{ctx.Request.Method, ctx.Request.RequestURI}
-
-	var exists bool
-	var application string
-	if application, exists = GetApplicationFromContext(ctx); exists {
-		resource = []string{application, ctx.Request.Method, ctx.Request.RequestURI}
+	application, exists := GetApplicationFromContext(ctx)
+	if !exists {
+		ex := feather_web_rest.NotFoundException("application name not found in context")
+		ctx.AbortWithStatusJSON(ex.Code, ex)
+		return
 	}
+	resource := []string{application, ctx.Request.Method, ctx.Request.RequestURI}
 
 	var err error
 	var principal *Principal
