@@ -5,19 +5,32 @@ import (
 )
 
 const (
-	PrincipalCtxKey = "principal"
+	ApplicationCtxKey = "application"
+	PrincipalCtxKey   = "principal"
 )
 
 func AddPrincipalToContext(ctx *gin.Context, principal *Principal) {
 	ctx.Set(PrincipalCtxKey, principal)
 }
 
-func GetPrincipalFROMContext(ctx *gin.Context) (*Principal, bool) {
+func AddApplicationToContext(ctx *gin.Context, application string) {
+	ctx.Set(ApplicationCtxKey, application)
+}
 
+func GetPrincipalFromContext(ctx *gin.Context) (*Principal, bool) {
 	var exists bool
-	var principal any
-	if principal, exists = ctx.Get(PrincipalCtxKey); !exists {
+	var value any
+	if value, exists = ctx.Get(PrincipalCtxKey); !exists {
 		return nil, false
 	}
-	return principal.(*Principal), true
+	return value.(*Principal), true
+}
+
+func GetApplicationFromContext(ctx *gin.Context) (string, bool) {
+	var exists bool
+	var value any
+	if value, exists = ctx.Get(ApplicationCtxKey); !exists {
+		return "", false
+	}
+	return value.(string), true
 }
