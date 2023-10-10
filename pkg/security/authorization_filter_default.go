@@ -47,7 +47,7 @@ func (filter *DefaultAuthorizationFilter) Authorize(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(ex.Code, ex)
 		return
 	}
-	resource := []string{application, ctx.Request.Method, ctx.Request.RequestURI}
+	resource := []string{application, ctx.Request.Method, ctx.FullPath()}
 
 	var err error
 	var principal *Principal
