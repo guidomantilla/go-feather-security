@@ -18,16 +18,18 @@ type JwtTokenManagerOption func(tokenManager *JwtTokenManager)
 type JwtTokenManager struct {
 	issuer        string
 	timeout       time.Duration
-	secretKey     any
+	signingKey    any
+	verifyingKey  any
 	signingMethod jwt.SigningMethod
 }
 
-func NewJwtTokenManager(secretKey any, options ...JwtTokenManagerOption) *JwtTokenManager {
+func NewJwtTokenManager(options ...JwtTokenManagerOption) *JwtTokenManager {
 
 	tokenManager := &JwtTokenManager{
 		issuer:        "",
 		timeout:       time.Hour * 24,
-		secretKey:     secretKey,
+		signingKey:    "some_long_signing_key",
+		verifyingKey:  "some_long_verifying_key",
 		signingMethod: jwt.SigningMethodHS512,
 	}
 
@@ -56,6 +58,18 @@ func WithSigningMethod(signingMethod jwt.SigningMethod) JwtTokenManagerOption {
 	}
 }
 
+func WithSigningKey(signingKey any) JwtTokenManagerOption {
+	return func(tokenManager *JwtTokenManager) {
+		tokenManager.signingKey = signingKey
+	}
+}
+
+func WithVerifyingKey(verifyingKey any) JwtTokenManagerOption {
+	return func(tokenManager *JwtTokenManager) {
+		tokenManager.verifyingKey = verifyingKey
+	}
+}
+
 func (manager *JwtTokenManager) Generate(principal *Principal) (*string, error) {
 
 	claims := &DefaultClaims{
@@ -73,7 +87,7 @@ func (manager *JwtTokenManager) Generate(principal *Principal) (*string, error) 
 
 	var err error
 	var tokenString string
-	if tokenString, err = token.SignedString(manager.secretKey); err != nil {
+	if tokenString, err = token.SignedString(manager.signingKey); err != nil {
 		return nil, ErrTokenGenerationFailed(err)
 	}
 
@@ -83,7 +97,7 @@ func (manager *JwtTokenManager) Generate(principal *Principal) (*string, error) 
 func (manager *JwtTokenManager) Validate(tokenString string) (*Principal, error) {
 
 	getKeyFunc := func(token *jwt.Token) (any, error) {
-		return manager.secretKey, nil
+		return manager.verifyingKey, nil
 	}
 
 	parserOptions := []jwt.ParserOption{
